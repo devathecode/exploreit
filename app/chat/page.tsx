@@ -61,11 +61,11 @@ export default function Chat() {
 
 
     return (
-        <div className="container">
+        <div className="">
             {<main>
                 {isLoggedIn ? (
                     <>
-                        <nav id="sign_out">
+                        <nav className="fixed top-0 w-full bg-gray-400">
                             <h2>Chat With Friends</h2>
                             <button onClick={Logout} className="bg-[red] cursor-pointer p-[1%] rounded-[10px] border-0 hover:border hover:bg-transparent hover:text-[white]
                              hover:border-solid hover:border-[red];">Sign Out</button>
