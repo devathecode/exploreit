@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "firebase/firestore";
 import { formatRelative } from "date-fns";
-import { addDoc, collection, getDocs } from "firebase/firestore";
+import { addDoc, collection, getDocs, serverTimestamp } from "firebase/firestore";
 import firebase from "firebase/compat/app";
 
 interface MessageModel {
@@ -55,7 +55,7 @@ export default function Chatroom(props: any) {
             console.log('temp(dataCollection);', res)
             setMessages(res);
         })
-    }, [db]);
+    });
 
     const addData = async (data: any) => {
         try {
@@ -70,19 +70,30 @@ export default function Chatroom(props: any) {
     // when form is submitted
     const handleSubmit = (e: any) => {
         e.preventDefault();
-        addData({
+        const msgData = {
             text: newMessage,
-            createdAt: '',
+            createdAt: serverTimestamp(),
             uid,
             displayName,
             photoURL,
-        })
-        setNewMessage("");
+        }
+        addData(msgData);
+        // setMessages((prev) => {
+        //     return [
+        //         ...prev,
+        //         msgData
+        //     ]
+        // })
+        // setNewMessage("");
     };
+
+    const getTime = (secs: any) => {
+        return new Date(secs * 1000);
+    }
 
     return (
         <>
-            <main className="border-t border-gray-50 px-2 py-10 h-screen">
+            <main className="border-t border-gray-50 px-2 pb-40">
                 <ul>
                     {messages.map((message) => (
                         <li key={message.text} className={message.uid === uid ? "flex flex-row-reverse mr-[5%]" : "received"}>
@@ -102,37 +113,30 @@ export default function Chatroom(props: any) {
                             <section className="inline-block">
                                 {/* display message text */}
                                 <p>{message.text}</p>
-
-                                {/* display user name */}
-                                {message.displayName ? <span>{message.displayName}</span> : null}
-                                <br />
-                                {/* display message date and time */}
-                                {message.createdAt?.seconds ? (
-                                    <span>
-                                        {formatRelative(
-                                            new Date(message.createdAt.seconds * 1000),
-                                            new Date()
-                                        )}
-                                    </span>
-                                ) : null}
+                                {message.createdAt?.seconds && <span className="text-sm text-red-200">{getTime(message.createdAt.seconds).toString().split('GMT')[0]}</span>}
                             </section>
                         </li>
                     ))}
                 </ul>
 
                 {/* input form */}
-                <form onSubmit={handleSubmit} className="fixed w-[90%] left-2 bottom-0">
-                    <input
-                        type="text"
-                        className="w-[79%] h-10"
-                        value={newMessage}
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        placeholder="Type your message here..."
-                    />
-
-                    <button type="submit" className="w-[19.5%] h-12" disabled={!newMessage}>
-                        Send
-                    </button>
+                <form onSubmit={handleSubmit} className="fixed left-0 bottom-0 w-full bg-gray-400">
+                    <div className="grid grid-cols-12 gap-2 px-2">
+                        <div className="col-span-9 my-auto">
+                            <input type="text"
+                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
+                         focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700
+                          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
+                           dark:focus:border-blue-500" value={newMessage}
+                                onChange={(e) => setNewMessage(e.target.value)}
+                                placeholder="Type your message here..." />
+                        </div>
+                        <div className="col-span-3">
+                            <button type="submit" className="h-10 my-2 w-full bg-black/30 cursor-pointer rounded-md" disabled={!newMessage}>
+                                Send
+                            </button>
+                        </div>
+                    </div>
                 </form>
             </main>
         </>
