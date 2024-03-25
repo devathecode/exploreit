@@ -64,7 +64,7 @@ export default function Chat() {
         <>
             <div className="grid grid-cols-12">
                 {isLoggedIn && <>
-                    <div className="col-span-12 md:col-span-3 h-screen bg-gray-700 relative">
+                    <div className="col-span-12 md:col-span-3 h-24 md:h-screen bg-gray-700 relative">
                         <nav className="text-white text-center border-b flex justify-between border-gray-500 p-2">
                             <img
                                 src={userData.photoURL}
