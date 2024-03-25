@@ -89,7 +89,7 @@ export default function Chatroom(props: any) {
 
     return (
         <>
-            <main className="border-t border-gray-50 py-40 relative h-screen bg-gray-100">
+            {messages && <main className="border-t border-gray-50 py-40 relative h-screen bg-gray-100">
                 <div className="absolute right-0 top-0 w-full bg-white">
                     {messages[0] ? (
                         <div className="flex flex-row p-2">
@@ -108,22 +108,20 @@ export default function Chatroom(props: any) {
                 </div>
                 <ul className="">
                     {messages.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds).reverse().map((message) => (
-                        <li key={message.id} className={`${message.uid === uid ? "flex flex-row-reverse" : "flex-row"}`}>
-                            {message.photoURL ? (
-                                <img
-                                    src={message.photoURL}
-                                    alt="Avatar"
-                                    className="h-8 w-8 mt-[5%] rounded-full"
-                                    width={45}
-                                    height={45}
-                                />
-                            ) : null}
+                        <li key={message.id} className={`group flex mt-5 ${message.uid === uid ? "flex-row-reverse" : "flex-row"}`}>
+                            <img
+                                src={message.photoURL}
+                                alt="Avatar"
+                                className="h-8 w-8 mt-20 rounded-full"
+                                width={45}
+                                height={45}
+                            />
 
-                            <div className="bg-gray-600 w-96 mx-2 rounded-xl text-white">
+                            <div className="bg-gray-600 w-72 md:w-96 mx-2 rounded-xl text-white">
                                 <section className="p-3">
                                     {/* display message text */}
-                                    <p className="mr-2">{message.text}</p>
-                                    {message.createdAt?.seconds && <span className="text-sm hidden hover:block text-red-200">{getTime(message.createdAt.seconds).toString().split('GMT')[0]}</span>}
+                                    <p className="">{message.text}</p>
+                                    {message.createdAt?.seconds && <span className="text-sm hidden group-hover:block text-red-200">{getTime(message.createdAt.seconds).toString().split('GMT')[0]}</span>}
                                 </section>
                             </div>
                         </li>
@@ -151,7 +149,7 @@ export default function Chatroom(props: any) {
                         </div>
                     </div>
                 </form>
-            </main>
+            </main>}
         </>
     );
 }
