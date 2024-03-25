@@ -89,46 +89,59 @@ export default function Chatroom(props: any) {
 
     return (
         <>
-            <main className="border-t border-gray-50 px-4 py-40">
+            <main className="border-t border-gray-50 py-40 relative h-screen bg-gray-100">
+                <div className="absolute right-0 top-0 w-full bg-white">
+                    {messages[0] ? (
+                        <div className="flex flex-row p-2">
+                            <img
+                                src={messages[0].photoURL}
+                                alt="Avatar"
+                                className="h-12 w-12 rounded-full"
+                                width={45}
+                                height={45}
+                            />
+                            <div className="my-auto">
+                                <p className="text-gray-600 ms-2">{messages[0].displayName}</p>
+                            </div>
+                        </div>
+                    ) : null}
+                </div>
                 <ul className="">
                     {messages.sort((a, b) => b.createdAt?.seconds - a.createdAt?.seconds).reverse().map((message) => (
                         <li key={message.id} className={`${message.uid === uid ? "flex flex-row-reverse" : "flex-row"}`}>
-                            <section className="">
-                                {/* display user image */}
-                                {message.photoURL ? (
-                                    <img
-                                        src={message.photoURL}
-                                        alt="Avatar"
-                                        className="h-20 w-20 mt-[5%] rounded-full"
-                                        width={45}
-                                        height={45}
-                                    />
-                                ) : null}
-                            </section>
+                            {message.photoURL ? (
+                                <img
+                                    src={message.photoURL}
+                                    alt="Avatar"
+                                    className="h-8 w-8 mt-[5%] rounded-full"
+                                    width={45}
+                                    height={45}
+                                />
+                            ) : null}
 
-                            <section className="">
-                                {/* display message text */}
-                                <p>{message.text}</p>
-                                {message.createdAt?.seconds && <span className="text-sm text-red-200">{getTime(message.createdAt.seconds).toString().split('GMT')[0]}</span>}
-                            </section>
+                            <div className="bg-gray-600 w-96 mx-2 rounded-xl text-white">
+                                <section className="p-3">
+                                    {/* display message text */}
+                                    <p className="mr-2">{message.text}</p>
+                                    {message.createdAt?.seconds && <span className="text-sm hidden hover:block text-red-200">{getTime(message.createdAt.seconds).toString().split('GMT')[0]}</span>}
+                                </section>
+                            </div>
                         </li>
                     ))}
                 </ul>
 
                 {/* input form */}
-                <form onSubmit={handleSubmit} className="fixed left-0 bottom-0 w-full bg-gray-400">
-                    <div className="grid grid-cols-12 gap-2 px-2">
+                <form onSubmit={handleSubmit} className="absolute right-0 bottom-0 w-full bg-white">
+                    <div className="grid grid-cols-12">
                         <div className="col-span-9 my-auto">
                             <input type="text"
-                                className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg
-                         focus:ring-blue-500 focus:border-blue-500 w-full p-2.5 dark:bg-gray-700
-                          dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500
-                           dark:focus:border-blue-500" value={newMessage}
+                                className="border-0 text-gray-900 text-sm rounded-lg
+                         focus:ring-blue-500 focus:border-blue-500 w-full p-2.5" value={newMessage}
                                 onChange={(e) => setNewMessage(e.target.value)}
-                                placeholder="Type your message here..." />
+                                placeholder="Write your message here..." />
                         </div>
                         <div className="col-span-3">
-                            <button type="submit" className="h-10 my-2 w-full bg-black/30 cursor-pointer rounded-md flex items-center justify-center" disabled={!newMessage}>
+                            <button type="submit" className="h-full w-full bg-green-700 text-white cursor-pointer flex items-center justify-center" disabled={!newMessage}>
                                 {/* Send */}
                                 {sending ? <svg aria-hidden="true" className="w-8 h-8 text-gray-200 animate-spin dark:text-gray-600 fill-white" viewBox="0 0 100 101" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M100 50.5908C100 78.2051 77.6142 100.591 50 100.591C22.3858 100.591 0 78.2051 0 50.5908C0 22.9766 22.3858 0.59082 50 0.59082C77.6142 0.59082 100 22.9766 100 50.5908ZM9.08144 50.5908C9.08144 73.1895 27.4013 91.5094 50 91.5094C72.5987 91.5094 90.9186 73.1895 90.9186 50.5908C90.9186 27.9921 72.5987 9.67226 50 9.67226C27.4013 9.67226 9.08144 27.9921 9.08144 50.5908Z" fill="currentColor" />
