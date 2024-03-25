@@ -54,7 +54,7 @@ export default function Chatroom(props: any) {
             setShowLoader(false);
             setMessages(res);
         })
-    });
+    }, []);
 
     const addData = async (data: any) => {
         try {
